@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -15,9 +15,31 @@
     <body style="margin: 0; overflow: hidden">
         <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;">
             <a-camera gps-camera rotation-reader></a-camera>
+
             <a-entity gltf-model="./assets/magnemite/scene.gltf" rotation="0 180 0" scale="5 5 5" gps-entity-place="longitude: 76.689280; latitude: 30.709330;" animation-mixer />
-            <!-- <a-entity gltf-model="./assets/drogon/scene.gltf" rotation="0 0 0" scale="0.1 0.1 0.1" gps-entity-place="longitude: 76.6908791; latitude: 30.7132906;" animation-mixer /> -->
+            <a-entity gltf-model="./assets/drogon/scene.gltf" rotation="0 0 0" scale="0.1 0.1 0.1" gps-entity-place="longitude: 76.6908791; latitude: 30.7132906;" animation-mixer />
             <a-entity gltf-model="./assets/dragonite/scene.gltf" rotation="0 0 0" scale="5 5 5" gps-entity-place="longitude: 76.6908791; latitude: 30.7132906;" animation-mixer />
+        </a-scene>
+    </body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>GeoAR.js demo</title>
+        <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+        <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+        <script>
+            THREEx.ArToolkitContext.baseURL = "https://raw.githack.com/jeromeetienne/ar.js/master/three.js/";
+        </script>
+        <script src="./index.js"></script>
+    </head>
+
+    <body style="margin: 0; overflow: hidden">
+        <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;">
+            <a-camera gps-camera="minDistance: 40;" rotation-reader></a-camera>
         </a-scene>
     </body>
 </html>
