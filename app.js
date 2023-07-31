@@ -6,7 +6,7 @@ app.use(express.static('assets'));
 //Idiomatic expression in express to route and respond to a client request
 app.get('/', (req, res) => {
     console.log(__dirname);     //get requests to the root ("/") will route here
-    res.sendFile(__dirname + '/index.html');      //server responds by sending the index.html file to the client's browser
+    res.sendFile('/index.html', { root: __dirname });      //server responds by sending the index.html file to the client's browser
     //the .sendFile method needs the absolute path to the file, see: https://expressjs.com/en/4x/api.html#res.sendFile 
 });
 

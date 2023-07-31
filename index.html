@@ -57,8 +57,9 @@
     </head>
     <body>
         <canvas class="webgl"></canvas>
+        <script type="module" src="./index.js"></script>
         <!-- <h1>Hellow</h1> -->
-        <script type="importmap">
+        <!-- <script type="importmap">
             {
                 "imports": {
                     "three": "./node_modules/three",
@@ -66,14 +67,14 @@
                     "three/addons/": "https://unpkg.com/three@0.153.0/examples/jsm/",
                 }
             }
-        </script>
-        <script type="module">
-            import * as THREE from three;
-            import * as THREEx from THREEx;
+        </script> -->
+        <!-- <script type="module">
+            import * as THREE from "./node_modules/three/build/three.js";
+            import * as THREEx from "./node_modules/@ar-js-org/ar.js/three.js/build/ar-threex-location-only.js";
 
+            console.log("dafkf", THREE, THREEx);
             function main() {
                 const canvas = document.querySelector("canvas.webgl");
-                console.log("dafkf", THREE, THREEx);
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(60, 1.33, 0.1, 10000);
                 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
@@ -129,6 +130,6 @@
             }
 
             main();
-        </script>
+        </script> -->
     </body>
 </html>
