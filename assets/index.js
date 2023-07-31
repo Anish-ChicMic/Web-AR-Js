@@ -112,9 +112,9 @@
 <!-- <script src="../build/ar-threex.js"></script> -->
 <script src="./ThreeX/ar-threex.js"></script> */}
 // import { THREE } from "./ThreeJs/three.min.js";
-import * as THREE from '/three/build/three.module';
-import { OrbitControls } from '/three/examples/jsm/controls/OrbitControls'
-import { GLTFLoader } from '/three/examples/jsm/loaders/GLTFLoader';
+import * as THREE from '../node_modules/three/build/three.module.js';
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from '../node_modules//three/examples/jsm/loaders/GLTFLoader';
 import { THREEx } from "../ThreeX/ar-threex.js";
 
 var renderer = new THREE.WebGLRenderer({
