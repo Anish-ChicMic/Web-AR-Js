@@ -104,173 +104,186 @@
 //		Init
 //////////////////////////////////////////////////////////////////////////////////
 
-    var renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-        precision: "mediump",
-    });
+{/* <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.min.js" integrity="sha512-n8IpKWzDnBOcBhRlHirMZOUvEq2bLRMuJGjuVqbzUJwtTsgwOgK5aS0c1JA647XWYfqvXve8k3PtZdzpipFjgg==" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js"></script> -->
 
-    var clock = new THREE.Clock();
+<!-- ar.js -->
+<!-- <script src="../build/ar-threex.js"></script> -->
+<script src="./ThreeX/ar-threex.js"></script> */}
+// import { THREE } from "./ThreeJs/three.min.js";
+import * as THREE from './node_modules/three/build/three.module';
+import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader';
+import { THREEx } from "./ThreeX/ar-threex.js";
 
-    var mixers = [];
+var renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+    precision: "mediump",
+});
 
-    renderer.setPixelRatio(window.devicePixelRatio);
+var clock = new THREE.Clock();
 
-    renderer.setClearColor(new THREE.Color("lightgrey"), 0);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = "absolute";
-    renderer.domElement.style.top = "0px";
-    renderer.domElement.style.left = "0px";
-    document.body.appendChild(renderer.domElement);
+var mixers = [];
 
-    // init scene and camera
-    var scene = new THREE.Scene();
+renderer.setPixelRatio(window.devicePixelRatio);
 
-    //////////////////////////////////////////////////////////////////////////////////
-    //		Initialize a basic camera
-    //////////////////////////////////////////////////////////////////////////////////
+renderer.setClearColor(new THREE.Color("lightgrey"), 0);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.domElement.style.position = "absolute";
+renderer.domElement.style.top = "0px";
+renderer.domElement.style.left = "0px";
+document.body.appendChild(renderer.domElement);
 
-    // Create a camera
-    var camera = new THREE.Camera();
-    scene.add(camera);
+// init scene and camera
+var scene = new THREE.Scene();
 
-    var light = new THREE.AmbientLight(0xffffff);
-    scene.add(light);
+//////////////////////////////////////////////////////////////////////////////////
+//		Initialize a basic camera
+//////////////////////////////////////////////////////////////////////////////////
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //          handle arToolkitSource
-    ////////////////////////////////////////////////////////////////////////////////
+// Create a camera
+var camera = new THREE.Camera();
+scene.add(camera);
 
-    var arToolkitSource = new THREEx.ArToolkitSource({
-        sourceType: "webcam",
+var light = new THREE.AmbientLight(0xffffff);
+scene.add(light);
+
+////////////////////////////////////////////////////////////////////////////////
+//          handle arToolkitSource
+////////////////////////////////////////////////////////////////////////////////
+
+var arToolkitSource = new THREEx.ArToolkitSource({
+    sourceType: "webcam",
+    sourceWidth: 480,
+    sourceHeight: 640,
+});
+
+arToolkitSource.init(function onReady() {
+    // use a resize to fullscreen mobile devices
+    setTimeout(function () {
+        onResize();
+    }, 1000);
+});
+
+// handle resize
+window.addEventListener("resize", function () {
+    onResize();
+});
+
+// listener for end loading of NFT marker
+window.addEventListener("arjs-nft-loaded", function (ev) {
+    console.log(ev);
+});
+
+function onResize() {
+    arToolkitSource.onResizeElement();
+    arToolkitSource.copyElementSizeTo(renderer.domElement);
+    if (arToolkitContext.arController !== null) {
+        arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//          initialize arToolkitContext
+////////////////////////////////////////////////////////////////////////////////
+
+// create atToolkitContext
+var arToolkitContext = new THREEx.ArToolkitContext(
+    {
+        detectionMode: "mono",
+        canvasWidth: 480,
+        canvasHeight: 640,
+    },
+    {
         sourceWidth: 480,
         sourceHeight: 640,
-    });
-
-    arToolkitSource.init(function onReady() {
-        // use a resize to fullscreen mobile devices
-        setTimeout(function () {
-            onResize();
-        }, 1000);
-    });
-
-    // handle resize
-    window.addEventListener("resize", function () {
-        onResize();
-    });
-
-    // listener for end loading of NFT marker
-    window.addEventListener("arjs-nft-loaded", function (ev) {
-        console.log(ev);
-    });
-
-    function onResize() {
-        arToolkitSource.onResizeElement();
-        arToolkitSource.copyElementSizeTo(renderer.domElement);
-        if (arToolkitContext.arController !== null) {
-            arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
-        }
     }
+);
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //          initialize arToolkitContext
-    ////////////////////////////////////////////////////////////////////////////////
+// initialize it
+arToolkitContext.init(function onCompleted() {
+    // copy projection matrix to camera
+    camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+});
 
-    // create atToolkitContext
-    var arToolkitContext = new THREEx.ArToolkitContext(
-        {
-            detectionMode: "mono",
-            canvasWidth: 480,
-            canvasHeight: 640,
-        },
-        {
-            sourceWidth: 480,
-            sourceHeight: 640,
-        }
-    );
+////////////////////////////////////////////////////////////////////////////////
+//          Create a ArMarkerControls
+////////////////////////////////////////////////////////////////////////////////
 
-    // initialize it
-    arToolkitContext.init(function onCompleted() {
-        // copy projection matrix to camera
-        camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+// init controls for camera
+var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+    type: "nft",
+    descriptorsUrl: "data/dataNFT/pinball",
+    changeMatrixMode: "cameraTransformMatrix",
+});
+
+scene.visible = false;
+
+var root = new THREE.Object3D();
+scene.add(root);
+
+//////////////////////////////////////////////////////////////////////////////////
+//		add an object in the scene
+//////////////////////////////////////////////////////////////////////////////////
+
+var threeGLTFLoader = new THREE.GLTFLoader();
+// Optional: Provide a DRACOLoader instance to decode compressed mesh data
+// const dracoLoader = new DRACOLoader();
+// dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
+// loader.setDRACOLoader( dracoLoader );
+var model;
+
+threeGLTFLoader.load("./assets/Flamingo.glb", function (gltf) {
+    model = gltf.scene.children[0];
+    model.name = "Flamingo";
+    const clips = gltf.animations;
+
+    var animation = gltf.animations[0];
+    var mixer = new THREE.AnimationMixer(gltf.scene);
+    mixers.push(mixer);
+    const clip = THREE.AnimationClip.findByName(clips, "flamingo_flyA_");
+    var action = mixer.clipAction(clip);
+    action.play();
+
+    root.matrixAutoUpdate = false;
+    root.add(model);
+
+    model.position.z = -100;
+    //model.position.z = 100;
+
+    window.addEventListener("arjs-nft-init-data", function (nft) {
+        console.log(nft);
+        var msg = nft.detail;
+        model.position.y = ((msg.height / msg.dpi) * 2.54 * 10) / 2.0; //y axis?
+        model.position.x = ((msg.width / msg.dpi) * 2.54 * 10) / 2.0; //x axis?
     });
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //          Create a ArMarkerControls
-    ////////////////////////////////////////////////////////////////////////////////
-
-    // init controls for camera
-    var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
-        type: "nft",
-        descriptorsUrl: "data/dataNFT/pinball",
-        changeMatrixMode: "cameraTransformMatrix",
-    });
-
-    scene.visible = false;
-
-    var root = new THREE.Object3D();
-    scene.add(root);
-
     //////////////////////////////////////////////////////////////////////////////////
-    //		add an object in the scene
+    //		render the whole thing on the page
     //////////////////////////////////////////////////////////////////////////////////
 
-    var threeGLTFLoader = new THREE.GLTFLoader();
-    // Optional: Provide a DRACOLoader instance to decode compressed mesh data
-    // const dracoLoader = new DRACOLoader();
-    // dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
-    // loader.setDRACOLoader( dracoLoader );
-    var model;
-
-    threeGLTFLoader.load("./assets/Flamingo.glb", function (gltf) {
-        model = gltf.scene.children[0];
-        model.name = "Flamingo";
-        const clips = gltf.animations;
-
-        var animation = gltf.animations[0];
-        var mixer = new THREE.AnimationMixer(gltf.scene);
-        mixers.push(mixer);
-        const clip = THREE.AnimationClip.findByName(clips, "flamingo_flyA_");
-        var action = mixer.clipAction(clip);
-        action.play();
-
-        root.matrixAutoUpdate = false;
-        root.add(model);
-
-        model.position.z = -100;
-        //model.position.z = 100;
-
-        window.addEventListener("arjs-nft-init-data", function (nft) {
-            console.log(nft);
-            var msg = nft.detail;
-            model.position.y = ((msg.height / msg.dpi) * 2.54 * 10) / 2.0; //y axis?
-            model.position.x = ((msg.width / msg.dpi) * 2.54 * 10) / 2.0; //x axis?
-        });
-
-        //////////////////////////////////////////////////////////////////////////////////
-        //		render the whole thing on the page
-        //////////////////////////////////////////////////////////////////////////////////
-
-        var animate = function () {
-            requestAnimationFrame(animate);
-
-            if (mixers.length > 0) {
-                for (var i = 0; i < mixers.length; i++) {
-                    mixers[i].update(clock.getDelta());
-                }
-            }
-
-            if (!arToolkitSource.ready) {
-                return;
-            }
-
-            arToolkitContext.update(arToolkitSource.domElement);
-
-            // update scene.visible if the marker is seen
-            scene.visible = camera.visible;
-
-            renderer.render(scene, camera);
-        };
-
+    var animate = function () {
         requestAnimationFrame(animate);
-    });
+
+        if (mixers.length > 0) {
+            for (var i = 0; i < mixers.length; i++) {
+                mixers[i].update(clock.getDelta());
+            }
+        }
+
+        if (!arToolkitSource.ready) {
+            return;
+        }
+
+        arToolkitContext.update(arToolkitSource.domElement);
+
+        // update scene.visible if the marker is seen
+        scene.visible = camera.visible;
+
+        renderer.render(scene, camera);
+    };
+
+    requestAnimationFrame(animate);
+});

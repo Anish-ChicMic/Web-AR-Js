@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "three": "^0.155.0",
+    "three-gltf-loader": "^1.111.0"
   }
 }

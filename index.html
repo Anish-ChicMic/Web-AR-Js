@@ -52,21 +52,23 @@
 
 <!-- three.js library -->
 <!-- <script src="vendor/three.js/build/three.min.js"></script> -->
-<script src="./ThreeJs/three.min.js"></script>
+<!-- <script src="./ThreeJs/three.min.js"></script> -->
 
 <!-- three.js load GLTF -->
 <!-- <script src="vendor/three.js/GLTFLoader.js"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.min.js" integrity="sha512-n8IpKWzDnBOcBhRlHirMZOUvEq2bLRMuJGjuVqbzUJwtTsgwOgK5aS0c1JA647XWYfqvXve8k3PtZdzpipFjgg==" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.min.js" integrity="sha512-n8IpKWzDnBOcBhRlHirMZOUvEq2bLRMuJGjuVqbzUJwtTsgwOgK5aS0c1JA647XWYfqvXve8k3PtZdzpipFjgg==" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js"></script> -->
 
 <!-- ar.js -->
 <!-- <script src="../build/ar-threex.js"></script> -->
-<script src="./ThreeX/ar-threex.js"></script>
+<!-- <script src="./ThreeX/ar-threex.js"></script> -->
+<!-- <script src="index.js"></script> -->
 
-<script>
+<!-- <script>
+    console.log("hey: ", GLTFLoader, THREE, THREEx);
     THREEx.ArToolkitContext.baseURL = "./";
-</script>
+</script> -->
 
 <body style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin: 0px; overflow: hidden">
     <style>
@@ -117,175 +119,176 @@
         //		Init
         //////////////////////////////////////////////////////////////////////////////////
 
-        var renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true,
-            precision: "mediump",
-        });
+        // var renderer = new THREE.WebGLRenderer({
+        //     antialias: true,
+        //     alpha: true,
+        //     precision: "mediump",
+        // });
 
-        var clock = new THREE.Clock();
+        // var clock = new THREE.Clock();
 
-        var mixers = [];
+        // var mixers = [];
 
-        renderer.setPixelRatio(window.devicePixelRatio);
+        // renderer.setPixelRatio(window.devicePixelRatio);
 
-        renderer.setClearColor(new THREE.Color("lightgrey"), 0);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.domElement.style.position = "absolute";
-        renderer.domElement.style.top = "0px";
-        renderer.domElement.style.left = "0px";
-        document.body.appendChild(renderer.domElement);
+        // renderer.setClearColor(new THREE.Color("lightgrey"), 0);
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        // renderer.domElement.style.position = "absolute";
+        // renderer.domElement.style.top = "0px";
+        // renderer.domElement.style.left = "0px";
+        // document.body.appendChild(renderer.domElement);
 
-        // init scene and camera
-        var scene = new THREE.Scene();
+        // // init scene and camera
+        // var scene = new THREE.Scene();
 
-        //////////////////////////////////////////////////////////////////////////////////
-        //		Initialize a basic camera
-        //////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////////
+        // //		Initialize a basic camera
+        // //////////////////////////////////////////////////////////////////////////////////
 
-        // Create a camera
-        var camera = new THREE.Camera();
-        scene.add(camera);
+        // // Create a camera
+        // var camera = new THREE.Camera();
+        // scene.add(camera);
 
-        var light = new THREE.AmbientLight(0xffffff);
-        scene.add(light);
+        // var light = new THREE.AmbientLight(0xffffff);
+        // scene.add(light);
 
-        ////////////////////////////////////////////////////////////////////////////////
-        //          handle arToolkitSource
-        ////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////////////////////////////////////////
+        // //          handle arToolkitSource
+        // ////////////////////////////////////////////////////////////////////////////////
 
-        var arToolkitSource = new THREEx.ArToolkitSource({
-            sourceType: "webcam",
-            sourceWidth: 480,
-            sourceHeight: 640,
-        });
+        // var arToolkitSource = new THREEx.ArToolkitSource({
+        //     sourceType: "webcam",
+        //     sourceWidth: 480,
+        //     sourceHeight: 640,
+        // });
 
-        arToolkitSource.init(function onReady() {
-            // use a resize to fullscreen mobile devices
-            setTimeout(function () {
-                onResize();
-            }, 1000);
-        });
+        // arToolkitSource.init(function onReady() {
+        //     // use a resize to fullscreen mobile devices
+        //     setTimeout(function () {
+        //         onResize();
+        //     }, 1000);
+        // });
 
-        // handle resize
-        window.addEventListener("resize", function () {
-            onResize();
-        });
+        // // handle resize
+        // window.addEventListener("resize", function () {
+        //     onResize();
+        // });
 
-        // listener for end loading of NFT marker
-        window.addEventListener("arjs-nft-loaded", function (ev) {
-            console.log(ev);
-        });
+        // // listener for end loading of NFT marker
+        // window.addEventListener("arjs-nft-loaded", function (ev) {
+        //     console.log(ev);
+        // });
 
-        function onResize() {
-            arToolkitSource.onResizeElement();
-            arToolkitSource.copyElementSizeTo(renderer.domElement);
-            if (arToolkitContext.arController !== null) {
-                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
-            }
-        }
+        // function onResize() {
+        //     arToolkitSource.onResizeElement();
+        //     arToolkitSource.copyElementSizeTo(renderer.domElement);
+        //     if (arToolkitContext.arController !== null) {
+        //         arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+        //     }
+        // }
 
-        ////////////////////////////////////////////////////////////////////////////////
-        //          initialize arToolkitContext
-        ////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////////////////////////////////////////
+        // //          initialize arToolkitContext
+        // ////////////////////////////////////////////////////////////////////////////////
 
-        // create atToolkitContext
-        var arToolkitContext = new THREEx.ArToolkitContext(
-            {
-                detectionMode: "mono",
-                canvasWidth: 480,
-                canvasHeight: 640,
-            },
-            {
-                sourceWidth: 480,
-                sourceHeight: 640,
-            }
-        );
+        // // create atToolkitContext
+        // var arToolkitContext = new THREEx.ArToolkitContext(
+        //     {
+        //         detectionMode: "mono",
+        //         canvasWidth: 480,
+        //         canvasHeight: 640,
+        //     },
+        //     {
+        //         sourceWidth: 480,
+        //         sourceHeight: 640,
+        //     }
+        // );
 
-        // initialize it
-        arToolkitContext.init(function onCompleted() {
-            // copy projection matrix to camera
-            camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
-        });
+        // // initialize it
+        // arToolkitContext.init(function onCompleted() {
+        //     // copy projection matrix to camera
+        //     camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+        // });
 
-        ////////////////////////////////////////////////////////////////////////////////
-        //          Create a ArMarkerControls
-        ////////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////////////////////////////////////////
+        // //          Create a ArMarkerControls
+        // ////////////////////////////////////////////////////////////////////////////////
 
-        // init controls for camera
-        var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
-            type: "nft",
-            descriptorsUrl: "data/dataNFT/pinball",
-            changeMatrixMode: "cameraTransformMatrix",
-        });
+        // // init controls for camera
+        // var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+        //     type: "nft",
+        //     descriptorsUrl: "data/dataNFT/pinball",
+        //     changeMatrixMode: "cameraTransformMatrix",
+        // });
 
-        scene.visible = false;
+        // scene.visible = false;
 
-        var root = new THREE.Object3D();
-        scene.add(root);
+        // var root = new THREE.Object3D();
+        // scene.add(root);
 
-        //////////////////////////////////////////////////////////////////////////////////
-        //		add an object in the scene
-        //////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////////
+        // //		add an object in the scene
+        // //////////////////////////////////////////////////////////////////////////////////
 
-        var threeGLTFLoader = new THREE.GLTFLoader();
-        // Optional: Provide a DRACOLoader instance to decode compressed mesh data
-        // const dracoLoader = new DRACOLoader();
-        // dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
-        // loader.setDRACOLoader( dracoLoader );
-        var model;
+        // var threeGLTFLoader = new THREE.GLTFLoader();
+        // // Optional: Provide a DRACOLoader instance to decode compressed mesh data
+        // // const dracoLoader = new DRACOLoader();
+        // // dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
+        // // loader.setDRACOLoader( dracoLoader );
+        // var model;
 
-        threeGLTFLoader.load("./assets/Flamingo.glb", function (gltf) {
-            model = gltf.scene.children[0];
-            model.name = "Flamingo";
-            const clips = gltf.animations;
+        // threeGLTFLoader.load("./assets/Flamingo.glb", function (gltf) {
+        //     model = gltf.scene.children[0];
+        //     model.name = "Flamingo";
+        //     const clips = gltf.animations;
 
-            var animation = gltf.animations[0];
-            var mixer = new THREE.AnimationMixer(gltf.scene);
-            mixers.push(mixer);
-            const clip = THREE.AnimationClip.findByName(clips, "flamingo_flyA_");
-            var action = mixer.clipAction(clip);
-            action.play();
+        //     var animation = gltf.animations[0];
+        //     var mixer = new THREE.AnimationMixer(gltf.scene);
+        //     mixers.push(mixer);
+        //     const clip = THREE.AnimationClip.findByName(clips, "flamingo_flyA_");
+        //     var action = mixer.clipAction(clip);
+        //     action.play();
 
-            root.matrixAutoUpdate = false;
-            root.add(model);
+        //     root.matrixAutoUpdate = false;
+        //     root.add(model);
 
-            model.position.z = -100;
-            //model.position.z = 100;
+        //     model.position.z = -100;
+        //     //model.position.z = 100;
 
-            window.addEventListener("arjs-nft-init-data", function (nft) {
-                console.log(nft);
-                var msg = nft.detail;
-                model.position.y = ((msg.height / msg.dpi) * 2.54 * 10) / 2.0; //y axis?
-                model.position.x = ((msg.width / msg.dpi) * 2.54 * 10) / 2.0; //x axis?
-            });
+        //     window.addEventListener("arjs-nft-init-data", function (nft) {
+        //         console.log(nft);
+        //         var msg = nft.detail;
+        //         model.position.y = ((msg.height / msg.dpi) * 2.54 * 10) / 2.0; //y axis?
+        //         model.position.x = ((msg.width / msg.dpi) * 2.54 * 10) / 2.0; //x axis?
+        //     });
 
-            //////////////////////////////////////////////////////////////////////////////////
-            //		render the whole thing on the page
-            //////////////////////////////////////////////////////////////////////////////////
+        //     //////////////////////////////////////////////////////////////////////////////////
+        //     //		render the whole thing on the page
+        //     //////////////////////////////////////////////////////////////////////////////////
 
-            var animate = function () {
-                requestAnimationFrame(animate);
+        //     var animate = function () {
+        //         requestAnimationFrame(animate);
 
-                if (mixers.length > 0) {
-                    for (var i = 0; i < mixers.length; i++) {
-                        mixers[i].update(clock.getDelta());
-                    }
-                }
+        //         if (mixers.length > 0) {
+        //             for (var i = 0; i < mixers.length; i++) {
+        //                 mixers[i].update(clock.getDelta());
+        //             }
+        //         }
 
-                if (!arToolkitSource.ready) {
-                    return;
-                }
+        //         if (!arToolkitSource.ready) {
+        //             return;
+        //         }
 
-                arToolkitContext.update(arToolkitSource.domElement);
+        //         arToolkitContext.update(arToolkitSource.domElement);
 
-                // update scene.visible if the marker is seen
-                scene.visible = camera.visible;
+        //         // update scene.visible if the marker is seen
+        //         scene.visible = camera.visible;
 
-                renderer.render(scene, camera);
-            };
+        //         renderer.render(scene, camera);
+        //     };
 
-            requestAnimationFrame(animate);
-        });
+        //     requestAnimationFrame(animate);
+        // });
     </script>
+    <script type="module" src="./index.js"></script>
 </body>
